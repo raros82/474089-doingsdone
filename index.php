@@ -43,9 +43,7 @@ $tasks = [
         ]
 ];
 
-function category_task_count(
-        $tasks_arr, $category_name
-) {
+function category_task_count($tasks_arr, $category_name) {
     $task_count=0;
     foreach ($tasks_arr as $tasks_value){
         if ($tasks_value['Категория'] == $category_name) {
