@@ -24,7 +24,7 @@
 <table class="tasks">
     <?php foreach ($tasks as $tasks_key => $tasks_value): ?>
         <?php if ($show_complete_tasks == 1 OR $tasks_value['Выполнен'] === 'Нет') : ?>
-            <tr class="tasks__item task <?php if ( $tasks_value['Выполнен'] === 'Да'): ?> task--completed <?php endif; ?>">
+            <tr class="tasks__item task <?php if ( $tasks_value['Выполнен'] === 'Да'): ?> task--completed <?php endif; ?> <?php if (is_numeric($tasks_value['Дата выполнения']) && (leeway($tasks_value['Дата выполнения']) <= 86400)): ?> task--important <?php endif; ?>">
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
                         <input class="checkbox__input visually-hidden" type="checkbox" <?php if ( $tasks_value['Выполнен'] === 'Да'): ?> checked <?php endif; ?>>

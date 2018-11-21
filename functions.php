@@ -32,3 +32,13 @@ function esc($str) {
 
     return $text;
 }
+
+
+function leeway($term) {
+    $b_time = is_numeric(strtotime($term));
+    if ($b_time) {
+        $curdate = time();
+        $a_time = strtotime($term) - $curdate;
+        return $a_time;
+     }
+}
