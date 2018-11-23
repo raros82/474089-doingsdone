@@ -42,3 +42,9 @@ $tasks = [
         'complited' => 'Нет'
     ]
 ];
+
+$user = [
+        'name' => 'Константин',
+        'sex' => 'male',
+        'userpic' => "#"
+ ];
