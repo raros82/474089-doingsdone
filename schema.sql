@@ -1,27 +1,31 @@
-create database DOINGSDONE
-	default character set utf8
-	default collate utf8_general_ci;
-use DOINGSDONE;
+CREATE DATABASE `474089-doingsdone`
+	DEFAULT CHARACTER SET utf8
+	DEFAULT COLLATE utf8_general_ci;
+USE `474089-doingsdone`;
 
-create table user (
-	id INT AUTO_INCREMENT PRIMARY KEY,
-	email char(128) UNIQUE,
-	password char(64)
+create table `user` (
+	`user_id` INT AUTO_INCREMENT PRIMARY KEY,
+	`email` VARCHAR(128) UNIQUE NOT NULL,
+	`password` VARCHAR(64)
 );
 
-create table category (
-	id int AUTO_INCREMENT PRIMARY KEY,
-	category_name char(128)
+CREATE TABLE `category` (
+	`category_id` INT AUTO_INCREMENT PRIMARY KEY,
+	`category_name` VARCHAR(128) UNIQUE NOT NULL
 );
 
-create table task (
-	id int AUTO_INCREMENT PRIMARY KEY,
-	category_id char(64),
-	user_id char(64),
-	creation_date DATETIME,
-	complete_date DATETIME,
-	task_status TINYINT DEFAULT '0',
-	task_name TEXT,
-	file_atach TEXT,
-	deadline DATETIME
+CREATE TABLE `task` (
+	`task_id` int AUTO_INCREMENT PRIMARY KEY,
+	`category_id` INT,
+	`user_id` INT,
+	`creation_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	`complete_date` DATETIME,
+	`task_status` TINYINT DEFAULT '0',
+	`task_name` VARCHAR(200) NOT NULL,
+	`file_atach` VARCHAR(200),
+	`deadline` DATETIME,
+	FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`),
+	FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 );
+
+CREATE UNIQUE INDEX `task_index` ON `task` (`task_name`);
