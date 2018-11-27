@@ -12,13 +12,13 @@ create table `user` (
 
 CREATE TABLE `category` (
 	`category_id` INT AUTO_INCREMENT PRIMARY KEY,
-	`category_name` VARCHAR(128) UNIQUE NOT NULL
+	`category_name` VARCHAR(128) NOT NULL
 );
 
 CREATE TABLE `task` (
 	`task_id` int AUTO_INCREMENT PRIMARY KEY,
-	`category_id` INT,
-	`user_id` INT,
+	`category_id` INT NOT NULL,
+	`user_id` INT NOT NULL,
 	`creation_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	`complete_date` DATETIME,
 	`task_status` TINYINT DEFAULT '0',
@@ -29,4 +29,4 @@ CREATE TABLE `task` (
 	FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 );
 
-CREATE UNIQUE INDEX `task_index` ON `task` (`task_name`);
+CREATE INDEX `task_index` ON `task` (`task_name`);
