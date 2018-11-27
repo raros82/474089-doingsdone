@@ -5,6 +5,7 @@ USE `474089-doingsdone`;
 
 create table `user` (
 	`user_id` INT AUTO_INCREMENT PRIMARY KEY,
+	`name` VARCHAR(50),
 	`email` VARCHAR(128) UNIQUE NOT NULL,
 	`password` VARCHAR(64)
 );
