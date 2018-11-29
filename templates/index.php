@@ -23,15 +23,18 @@
 
 <table class="tasks">
     <?php foreach ($tasks as $tasks_key => $tasks_value): ?>
-        <?php if ($show_complete_tasks == 1 OR $tasks_value['complited'] === 'Нет') : ?>
-            <tr class="tasks__item task <?php if ( $tasks_value['complited'] === 'Да'): ?> task--completed <?php endif; ?> <?php if (leeway($tasks_value['deadline'])) : ?> task--important <?php endif; ?>">
+        <?php if ($show_complete_tasks == 1 OR $tasks_value['task_status'] == 0) : ?>
+            <tr class="tasks__item task <?php if ( $tasks_value['task_status'] == 1): ?> task--completed <?php endif; ?> <?php if (leeway($tasks_value['deadline'])) : ?> task--important <?php endif; ?>">
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
-                        <input class="checkbox__input visually-hidden" type="checkbox" <?php if ( $tasks_value['complited'] === 'Да'): ?> checked <?php endif; ?>>
-                        <span class="checkbox__text"><?=esc($tasks_value['task']); ?></span>
+                        <input class="checkbox__input visually-hidden" type="checkbox" <?php if ( $tasks_value['task_status'] == '1'): ?> checked <?php endif; ?>>
+                        <span class="checkbox__text"><?=esc($tasks_value['task_name']); ?></span>
                     </label>
                 </td>
-                <td class="task__date"><?=esc($tasks_value['deadline']); ?></td>
+                <td class="task__date"><?php if($tasks_value['deadline']!='0000-00-00 00:00:00')
+                    {$deadline_date = strtotime($tasks_value['deadline']);
+                    echo date("d.m.Y",esc($deadline_date));}
+                    else {echo "Нет";} ; ?></td>
                 <td class="task__controls"> </td>
             </tr>
         <?php endif; ?>
