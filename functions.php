@@ -20,7 +20,7 @@ return $result;
 function category_task_count($tasks_arr, $category_name) {
     $task_count=0;
     foreach ($tasks_arr as $tasks_value){
-        if ($tasks_value['category'] == $category_name) {
+        if ($tasks_value['category_id'] == $category_name) {
             $task_count ++;
         }
     }
@@ -36,11 +36,12 @@ function esc($str) {
 
 function leeway($term) {
     $b_time = is_numeric(strtotime($term));
-    if ($b_time) {
+
+    if ($b_time && $term <> '0000-00-00 00:00:00') {
         $curdate = time();
         $a_time = strtotime($term) - $curdate;
         if ($a_time <= 86400) {
             return true;
         }
     }
-}
+};
