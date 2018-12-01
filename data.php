@@ -44,7 +44,7 @@ $show_complete_tasks = rand(0, 1);
 //];
 
 $user = [
-        'name' => 'Константин',
-        'sex' => 'male',
-        'userpic' => "#"
- ];
+       'name' => 'Константин',
+       'sex' => 'male',
+       'userpic' => "#"
+];

@@ -31,10 +31,7 @@
                         <span class="checkbox__text"><?=esc($tasks_value['task_name']); ?></span>
                     </label>
                 </td>
-                <td class="task__date"><?php if($tasks_value['deadline']!='0000-00-00 00:00:00')
-                    {$deadline_date = strtotime($tasks_value['deadline']);
-                    echo date("d.m.Y",esc($deadline_date));}
-                    else {echo "Нет";} ; ?></td>
+                <td class="task__date"><?php deadline($tasks_value['deadline']); ?></td>
                 <td class="task__controls"> </td>
             </tr>
         <?php endif; ?>

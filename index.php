@@ -1,18 +1,11 @@
 <?php
 require_once('functions.php');
 require_once('data.php');
-
-
-$mysqli = new mysqli('doingsdone','root','','474089-doingsdone');
+require_once('mysql_connect.php');
 
 //запрос на выборку проектов (категорий)
-if ($mysqli->connect_error) {
-    die('Error : ('. $mysqli->connect_errno .') '. $mysqli->connect_error);
-}
-else {
-    $sql = 'SELECT `category_id`, `category_name` FROM `category`';
-    $result = mysqli_query($mysqli, $sql);
-};
+$sql = 'SELECT * FROM `category` WHERE `user_id`=1'; //будет подставляться значение залогиненного юзера
+$result = mysqli_query($mysqli, $sql);
 
 if ($result) {
     $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -23,13 +16,8 @@ else {
 };
 
 //запрос на выборку задач
-if ($mysqli->connect_error) {
-    die('Error : ('. $mysqli->connect_errno .') '. $mysqli->connect_error);
-}
-else {
-    $sql = 'SELECT * FROM `task`';
-    $result = mysqli_query($mysqli, $sql);
-};
+$sql = 'SELECT * FROM `task`';
+$result = mysqli_query($mysqli, $sql);
 
 if ($result) {
     $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -50,9 +38,3 @@ $layout_content = include_template('layout.php', [
 ]);
 
 print($layout_content);
-
-//print_r($categories);
-
-//foreach ($categories as $task_category_value) {
-//    print($task_category_value['category_name']);
-//};
