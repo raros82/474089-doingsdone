@@ -2,7 +2,7 @@
 INSERT INTO `user` (name, email, `password`)
 VALUES ('Константин', 'kostya99@mail.ru', 'boss');
 
-/*Ввод категорий задач*/`474089-doingsdone`
+/*Ввод категорий задач*/
 INSERT INTO `category` (user_id, category_name) 
 VALUES ('1','Входящие'), 
 		 ('1','Учеба'), 
@@ -18,22 +18,6 @@ VALUES ('3', '0', 'Собеседование в IT компании', '01.12.20
        ('1', '0', 'Встреча с другом', '22.12.2018'),
        ('4', '0', 'Купить корм для кота', NULL ),
        ('4', '0', 'Заказать пиццу', NULL );
-
-
-/*получить список из всех проектов для одного пользователя*/
-SELECT * FROM `task` WHERE user_id = 1;
-
-/*получить список из всех задач для одного проекта*/
-SELECT * FROM `task` WHERE category_id = 3;
-
-/*пометить задачу как выполненную*/
-UPDATE `task` SET task_status = '1' WHERE task_id = 1;
-
-/*получить все задачи для завтрашнего дня*/
-SELECT * FROM `task` WHERE deadline = CURRENT_DATE() + 1;
-
-/*обновить название задачи по её идентификатору*/
-UPDATE `task` SET task_name = 'Сделать задание первого раздела' WHERE task_id = 3;
 
 
 

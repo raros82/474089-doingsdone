@@ -16,16 +16,6 @@ $result = ob_get_clean();
 return $result;
 }
 
-//
-//function category_task_count($tasks_arr, $category_name) {
-//    $task_count=0;
-//    foreach ($tasks_arr as $tasks_value){
-//        if ($tasks_value['category_id'] == $category_name) {
-//            $task_count ++;
-//        }
-//    }
-//    return $task_count;
-//}
 
 function esc($str) {
     $text = htmlspecialchars($str);
@@ -42,8 +32,10 @@ function leeway($term) {
         $a_time = strtotime($term) - $curdate;
         if ($a_time <= 86400) {
             return true;
-        } else {return false;}
-    } else {return false;}
+        }
+        else {return false;
+        }
+    }
 }
 
 function deadline($deadline) {
@@ -54,10 +46,3 @@ function deadline($deadline) {
         echo "Нет";}
 }
 
-
-function category_exists($category_arr){
-    $a=(array_column($category_arr, 'category_exists_quary'));
-    foreach ($a as $key => $value){
-        return($value);
-    }
-}

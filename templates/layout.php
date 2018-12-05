@@ -28,7 +28,9 @@
                     </div>
 
                     <div class="user-menu__data">
-                        <p><?=$user['name'];?></p>
+                        <p><?php foreach($user as $key_user => $value_user){
+                            echo $value_user['name'];
+                            } ?> </p>
 
                         <a href="#">Выйти</a>
                     </div>
