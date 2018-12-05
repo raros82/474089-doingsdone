@@ -42,15 +42,22 @@ function leeway($term) {
         $a_time = strtotime($term) - $curdate;
         if ($a_time <= 86400) {
             return true;
-        } else {return false;};
+        } else {return false;}
     } else {return false;}
-};
+}
 
 function deadline($deadline) {
     if(!is_null($deadline)) {
         $deadline_date = strtotime($deadline);
         echo date("d.m.Y",$deadline_date);}
     else {
-        echo "Нет";};
-    };
+        echo "Нет";}
+}
 
+
+function category_exists($category_arr){
+    $a=(array_column($category_arr, 'category_exists_quary'));
+    foreach ($a as $key => $value){
+        return($value);
+    }
+}
