@@ -11,7 +11,7 @@ if (!$result) {
     die('Error : ('. $error .')');
 }
 
-$user = mysqli_fetch_all($result, MYSQLI_ASSOC);
+$user = mysqli_fetch_assoc($result);
 
 //получаем информацию о всех проектах пользователя с учетом всех невыполненных задач в каждом из проектов
 $sql = 'SELECT cat.category_id, cat.category_name, COUNT(CASE WHEN t.task_status = 0 THEN 1 ELSE NULL END) as count_task_id FROM category cat LEFT JOIN task t ON cat.category_id = t.category_id WHERE cat.user_id =' .$user_id .' GROUP BY cat.category_id, cat.category_name';
