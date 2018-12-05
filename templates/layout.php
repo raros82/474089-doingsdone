@@ -42,10 +42,10 @@
 
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
-                        <?php foreach ($task_category as $task_category_value): ?>
+                        <?php foreach ($categories as $category_value): ?>
                             <li class="main-navigation__list-item">
-                                <a class="main-navigation__list-item-link" href="#"><?=$task_category_value['category_name'];?></a>
-                                <span class="main-navigation__list-item-count"><?=category_task_count($tasks,$task_category_value['category_id']); ?></span>
+                                <a class="main-navigation__list-item-link" href="/?category=<?=$category_value['category_id'];?>"><?=$category_value['category_name'];?></a>
+                                <span class="main-navigation__list-item-count"><?=$category_value['count_task_id']; ?></span>
                             </li>
                         <?php endforeach; ?>
                     </ul>

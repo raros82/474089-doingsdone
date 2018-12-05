@@ -16,16 +16,16 @@ $result = ob_get_clean();
 return $result;
 }
 
-
-function category_task_count($tasks_arr, $category_name) {
-    $task_count=0;
-    foreach ($tasks_arr as $tasks_value){
-        if ($tasks_value['category_id'] == $category_name) {
-            $task_count ++;
-        }
-    }
-    return $task_count;
-}
+//
+//function category_task_count($tasks_arr, $category_name) {
+//    $task_count=0;
+//    foreach ($tasks_arr as $tasks_value){
+//        if ($tasks_value['category_id'] == $category_name) {
+//            $task_count ++;
+//        }
+//    }
+//    return $task_count;
+//}
 
 function esc($str) {
     $text = htmlspecialchars($str);
@@ -37,11 +37,27 @@ function esc($str) {
 function leeway($term) {
     $b_time = is_numeric(strtotime($term));
 
-    if ($b_time && $term <> '0000-00-00 00:00:00') {
+    if ($b_time && !is_null($term)) {
         $curdate = time();
         $a_time = strtotime($term) - $curdate;
         if ($a_time <= 86400) {
             return true;
-        }
+        } else {return false;}
+    } else {return false;}
+}
+
+function deadline($deadline) {
+    if(!is_null($deadline)) {
+        $deadline_date = strtotime($deadline);
+        echo date("d.m.Y",$deadline_date);}
+    else {
+        echo "Нет";}
+}
+
+
+function category_exists($category_arr){
+    $a=(array_column($category_arr, 'category_exists_quary'));
+    foreach ($a as $key => $value){
+        return($value);
     }
-};
+}
