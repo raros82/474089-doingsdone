@@ -49,7 +49,7 @@ if (isset($_GET['category'])) {
     }
 }
 
-$sql = 'SELECT * FROM `task`';
+$sql = 'SELECT * FROM `task` ORDER BY `creation_date` DESC ';
 if ($selected_category > 0) {
     $sql .= ' WHERE category_id =' . $selected_category;
 }
