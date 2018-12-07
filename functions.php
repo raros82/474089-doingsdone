@@ -81,3 +81,25 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
 
     return $stmt;
 }
+
+function user_project_verification($user, $project, $bd_link) {
+
+    mysqli_set_charset($bd_link, "utf8");
+
+    if (!$bd_link) {
+        $error = mysqli_connect_error();
+        exit('Сайт временно не доступен.');
+    }
+
+    $sql = 'SELECT category_id FROM category WHERE user_id =' .$user;
+    $result = mysqli_query($bd_link, $sql);
+    if (!$result) {
+        $error = mysqli_error($bd_link);
+        die('Error : ('. $error .')');
+    }
+    $user_projects = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    if (in_array($project, array_column($user_projects, 'category_id'))){
+        return true;
+    }else {return false;}
+
+}

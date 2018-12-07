@@ -37,15 +37,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    //проверка существования проекта
-    if (!in_array($add_task['project'], array_column($categories,'category_id'))){
+
+   //проверка существования проекта
+    if (!isset($add_task['project']) OR user_project_verification($user_id, $add_task['project'], $mysqli ) == FALSE){
         $errors['project'] = 'Выбранный проект не существует';
     }
 
+
     //проверка даты
-    if (strtotime($add_task['date']) && (strtotime($add_task['date'])) <= (strtotime('now') - 86400)){
-        $errors['date'] = 'Введите дату в формате ДД.ММ.ГГГГ. Дата должна быть не меньше текущей.';
-    }
+        if (!isset($add_task['date']) OR !strtotime($add_task['date']) OR (strtotime($add_task['date'])) < strtotime(date("Y-m-d", time()))){
+            $errors['date'] = 'Введите дату в формате ДД.ММ.ГГГГ. Дата должна быть не меньше текущей.';
+        }
+
 
     //проверка длины названия задачи
     if (iconv_strlen($add_task['name'])>200){
@@ -56,8 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (count($errors)) {
         $page_content = include_template('add.php', ['add_task' => $add_task, 'errors' => $errors, 'categories' => $categories]);
 
-        $add_task = array();
-        $add_file = array();
+
     }
     //в случае отсутствия ошибок переадресация на главную страницу
     else {
@@ -104,5 +106,7 @@ $layout_content = include_template('layout.php', [
     'content' => $page_content,
     'user' => $user
 ]);
+
+
 
 print($layout_content);

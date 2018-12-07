@@ -5,7 +5,7 @@
           <div class="form__row">
             <label class="form__label" for="name">Название <sup>*</sup></label>
 
-            <input class="form__input <?php if ($errors['name']): ?>form__input--error<?php endif; ?>" type="text" name="name" id="name" value="<?php if (isset($add_task['name'])){echo($add_task['name']);}?>" placeholder="Введите название">
+            <input class="form__input <?php if (isset($errors['name'])): ?>form__input--error<?php endif; ?>" type="text" name="name" id="name" value="<?php if (isset($add_task['name'])){echo($add_task['name']);}?>" placeholder="Введите название">
               <?php if (isset($errors['name'])): ?><p class="form__message"><?php echo $errors['name'];?></p><?php endif; ?>
           </div>
 
@@ -15,15 +15,16 @@
                 <?php foreach ($categories as $category_value): ?>
                     <option value = "<?=$category_value['category_id'];?>" <?php if (isset($add_task['project']) && $add_task['project'] == $category_value['category_id']): ?>selected<?php endif;?>> <?=$category_value['category_name'];?></option >
                 <?php endforeach; ?>
-                <?php if ($errors['project']): ?><p class="form__message"><?php echo $errors['project'];?></p><?php endif; ?>
+
             </select>
+              <?php if (isset($errors['project'])): ?><p class="form__message"><?php echo $errors['project'];?></p><?php endif; ?>
           </div>
 
           <div class="form__row">
             <label class="form__label" for="date">Дата выполнения</label>
 
             <input class="form__input form__input--date <?php if ($errors['date']): ?>form__input--error<?php endif; ?>" type="date" name="date" id="date" value="<?php if (isset($add_task['date'])){echo $add_task['date'];}?>" placeholder="Введите дату в формате ДД.ММ.ГГГГ">
-              <?php if ($errors['date']): ?><p class="form__message"><?php echo $errors['date'];?></p><?php endif; ?>
+              <?php if (isset($errors['date'])): ?><p class="form__message"><?php echo $errors['date'];?></p><?php endif; ?>
           </div>
 
           <div class="form__row">
