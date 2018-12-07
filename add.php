@@ -33,17 +33,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     foreach ($required as $key) {
         if (empty($_POST[$key])) {
-            $errors[$key] = 'Это поле надо заполнить';
+            $errors[$key] = 'Это поле надо заполнить. Максимальная длина 200 символов.';
         }
     }
+
+    //проверка существования проекта
+    if (!in_array($add_task['project'], array_column($categories,'category_id'))){
+        $errors['project'] = 'Выбранный проект не существует';
+    }
+
+    //проверка даты
+    if (strtotime($add_task['date']) && (strtotime($add_task['date'])) <= (strtotime('now') - 86400)){
+        $errors['date'] = 'Введите дату в формате ДД.ММ.ГГГГ. Дата должна быть не меньше текущей.';
+    }
+
+    //проверка длины названия задачи
+    if (iconv_strlen($add_task['name'])>200){
+        $errors['name'] = 'Превышена максимальная длина 200 символов';
+    }
+
+
     if (count($errors)) {
         $page_content = include_template('add.php', ['add_task' => $add_task, 'errors' => $errors, 'categories' => $categories]);
+
         $add_task = array();
         $add_file = array();
     }
     //в случае отсутствия ошибок переадресация на главную страницу
     else {
-        if(($add_file['preview']['size']) != 0) {
+        if(is_uploaded_file($_FILES['preview']['tmp_name'])) {
             $filename_id = uniqid();
             $filename = $filename_id . '_' . $_FILES['preview']['name'];
             move_uploaded_file($_FILES['preview']['tmp_name'], 'uploads/' . $filename);
@@ -56,47 +74,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = db_get_prepare_stmt($mysqli, $sql, [$add_task['project'], $add_task['name'], $add_task['date']]);
             $res = mysqli_stmt_execute($stmt);
         }
+        //редирект на главную страницу
+        header('Location: /');
+        exit();
 
-//получаем список задач для вывода на странице
-        $selected_category = 0;
-
-        if (isset($_GET['category'])) {
-            $selected_category = intval($_GET['category']);
-
-            $sql = 'SELECT * FROM category WHERE user_id = ' . $user_id . ' AND category_id = ' . $selected_category;
-
-            $result = mysqli_query($mysqli, $sql);
-
-            if (!$result) {
-                $error = mysqli_error($mysqli);
-                die('Извините, сайт временно не доступен. Ведутся технические работы.');
-            }
-
-            $selected_category_exists = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-            if (count($selected_category_exists) == 0) {
-                http_response_code(404);
-                echo 'Упс. Страница не найдена';
-                die();
-            }
-        }
-
-        $sql = 'SELECT * FROM `task` ORDER BY `creation_date` DESC ';
-        if ($selected_category > 0) {
-            $sql .= ' WHERE category_id =' . $selected_category;
-        }
-        $result = mysqli_query($mysqli, $sql);
-
-
-        if (!$result) {
-            $error = mysqli_error($mysqli);
-            die('Извините, сайт временно не доступен. Ведутся технические работы.');
-        }
-
-        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-
-        $page_content = include_template('index.php', ['tasks' => $tasks, 'show_complete_tasks' => $show_complete_tasks]);
     }
 }
 
@@ -123,6 +104,5 @@ $layout_content = include_template('layout.php', [
     'content' => $page_content,
     'user' => $user
 ]);
-
 
 print($layout_content);

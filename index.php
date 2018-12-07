@@ -77,18 +77,6 @@ $layout_content = include_template('layout.php', [
 ]);
 
 
-$a = "0000-00-00 00:00:00";
-$b = null;
-
-//print is_numeric(strtotime($a));
-//print is_numeric(strtotime($b));
-
-//print strtotime($a);
-//print is_numeric($a);
-//print true;
-//print false;
-
-print !is_null($a);
 
 
 print($layout_content);
