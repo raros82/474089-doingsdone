@@ -51,8 +51,10 @@ if (isset($_GET['category'])) {
 
 $sql = 'SELECT * FROM `task` ORDER BY `creation_date` DESC ';
 if ($selected_category > 0) {
-    $sql .= ' WHERE category_id =' . $selected_category;
+    $sql = ' SELECT * FROM `task` WHERE category_id =' . $selected_category .' ORDER BY `creation_date` DESC ';
 }
+
+
 $result = mysqli_query($mysqli, $sql);
 
 
@@ -74,6 +76,19 @@ $layout_content = include_template('layout.php', [
     'user' => $user
 ]);
 
+
+$a = "0000-00-00 00:00:00";
+$b = null;
+
+//print is_numeric(strtotime($a));
+//print is_numeric(strtotime($b));
+
+//print strtotime($a);
+//print is_numeric($a);
+//print true;
+//print false;
+
+print !is_null($a);
+
+
 print($layout_content);
-
-
