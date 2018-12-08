@@ -15,21 +15,26 @@ if (!$result) {
 $user = mysqli_fetch_assoc($result);
 
 //получаем информацию о всех проектах пользователя с учетом всех невыполненных задач в каждом из проектов
-$sql = 'SELECT cat.category_id, cat.category_name, COUNT(CASE WHEN t.task_status = 0 THEN 1 ELSE NULL END) as count_task_id FROM category cat LEFT JOIN task t ON cat.category_id = t.category_id WHERE cat.user_id =' .$user_id .' GROUP BY cat.category_id, cat.category_name';
-$result = mysqli_query($mysqli, $sql);
-if (!$result) {
-    $error = mysqli_error($mysqli);
-    die('Error : ('. $error .')');
-}
+$categories = user_projects_with_open_tasks($user_id, $mysqli);
 
-$categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+$errors = [];
+$add_task = [
+    'name' => '',
+    'project' => null,
+    'date' => null, //лучше deadline, ибо это конкретная дата
+    'file_path' => null
+];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $add_task = $_POST;
-    $add_file = $_FILES;
+    $add_task['name'] = $_POST['name'];
+    $add_task['project'] = $_POST['project'];
+    $add_task['date'] = $_POST['date'];
+    //$add_task['file_path'] = $_POST['file_path'];
 
-    $required = ['name'];
-    $errors = [];
+    //$add_file = $_FILES;
+
+    $required = ['name' , 'project'];
+
 
     foreach ($required as $key) {
         if (empty($_POST[$key])) {
@@ -45,9 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     //проверка даты
-        if (!isset($add_task['date']) OR !strtotime($add_task['date']) OR (strtotime($add_task['date'])) < strtotime(date("Y-m-d", time()))){
-            $errors['date'] = 'Введите дату в формате ДД.ММ.ГГГГ. Дата должна быть не меньше текущей.';
-        }
+    if (!isset($add_task['date']) OR !strtotime($add_task['date']) OR (strtotime($add_task['date'])) < strtotime(date("Y-m-d", time()))){
+        $errors['date'] = 'Введите дату в формате ДД.ММ.ГГГГ. Дата должна быть не меньше текущей.';
+    }
 
 
     //проверка длины названия задачи
@@ -58,17 +63,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (count($errors)) {
         $page_content = include_template('add.php', ['add_task' => $add_task, 'errors' => $errors, 'categories' => $categories]);
-
-
     }
+
     //в случае отсутствия ошибок переадресация на главную страницу
-    else {
+    elseif(isset($add_task['project']) && isset($add_task['name']) && isset($add_task['date'])) {
         if(is_uploaded_file($_FILES['preview']['tmp_name'])) {
             $filename_id = uniqid();
-            $filename = $filename_id . '_' . $_FILES['preview']['name'];
-            move_uploaded_file($_FILES['preview']['tmp_name'], 'uploads/' . $filename);
+            $add_task['file_path'] = 'uploads/' .$filename_id . '_' . $_FILES['preview']['name'];
+            move_uploaded_file($_FILES['preview']['tmp_name'], $add_task['file_path']);
             $sql = 'INSERT INTO task (category_id, task_name, file_atach, deadline) VALUES (?, ?, ?, ?)';
-            $stmt = db_get_prepare_stmt($mysqli, $sql, [$add_task['project'], $add_task['name'], 'uploads/' . $filename, $add_task['date']]);
+            $stmt = db_get_prepare_stmt($mysqli, $sql, [$add_task['project'], $add_task['name'], $add_task['file_path'], $add_task['date']]);
             $res = mysqli_stmt_execute($stmt);
         }
         else {
@@ -76,6 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = db_get_prepare_stmt($mysqli, $sql, [$add_task['project'], $add_task['name'], $add_task['date']]);
             $res = mysqli_stmt_execute($stmt);
         }
+
         //редирект на главную страницу
         header('Location: /');
         exit();
@@ -83,22 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// Если метод не POST, то загружаем пустую форму
-else {
-    $page_content = include_template('add.php', ['errors' => FALSE,'categories' => $categories]);
- }
 
-
-//обновляем информацию о всех проектах пользователя с учетом всех невыполненных задач в каждом из проектов
-$sql = 'SELECT cat.category_id, cat.category_name, COUNT(CASE WHEN t.task_status = 0 THEN 1 ELSE NULL END) as count_task_id FROM category cat LEFT JOIN task t ON cat.category_id = t.category_id WHERE cat.user_id =' .$user_id .' GROUP BY cat.category_id, cat.category_name';
-$result = mysqli_query($mysqli, $sql);
-if (!$result) {
-    $error = mysqli_error($mysqli);
-    die('Error : ('. $error .')');
-}
-
-$categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
+$page_content = include_template('add.php', ['add_task' => $add_task, 'errors' => $errors, 'categories' => $categories]);
 
 $layout_content = include_template('layout.php', [
     'title' => 'Дела в порядке/Добавление задачи',
@@ -106,7 +97,6 @@ $layout_content = include_template('layout.php', [
     'content' => $page_content,
     'user' => $user
 ]);
-
 
 
 print($layout_content);

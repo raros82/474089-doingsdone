@@ -42,8 +42,11 @@ function leeway($term){
 function deadline($deadline) {
     if(!is_null($deadline) && $deadline != "0000-00-00 00:00:00" ) {
         $deadline_date = strtotime($deadline);
-        echo date("d.m.Y",$deadline_date);}
-    else {echo "Нет";}
+        echo date("d.m.Y",$deadline_date);
+    }
+    else {
+        echo "Нет";
+    }
 }
 
 
@@ -84,22 +87,23 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
 
 function user_project_verification($user, $project, $bd_link) {
 
-    mysqli_set_charset($bd_link, "utf8");
-
-    if (!$bd_link) {
-        $error = mysqli_connect_error();
-        exit('Сайт временно не доступен.');
-    }
-
-    $sql = 'SELECT category_id FROM category WHERE user_id =' .$user;
+    $sql = 'SELECT category_id FROM category WHERE user_id = ' . $user . ' AND category_id = ' . intval($project);
     $result = mysqli_query($bd_link, $sql);
     if (!$result) {
         $error = mysqli_error($bd_link);
         die('Error : ('. $error .')');
     }
-    $user_projects = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    if (in_array($project, array_column($user_projects, 'category_id'))){
-        return true;
-    }else {return false;}
+    return $result;
+}
 
+//функция возвращает информацию о всех проектах пользователя с учетом всех невыполненных задач в каждом из проектов
+function user_projects_with_open_tasks($user, $bd_link){
+    $sql = 'SELECT cat.category_id, cat.category_name, COUNT(CASE WHEN t.task_status = 0 THEN 1 ELSE NULL END) as count_task_id FROM category cat LEFT JOIN task t ON cat.category_id = t.category_id WHERE cat.user_id =' . $user . ' GROUP BY cat.category_id, cat.category_name';
+    $result = mysqli_query($bd_link, $sql);
+    if (!$result) {
+        $error = mysqli_error($bd_link);
+        die('Error : (' . $error . ')');
+    }
+    $user_projects_with_open_tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return $user_projects_with_open_tasks;
 }

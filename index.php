@@ -14,14 +14,7 @@ if (!$result) {
 $user = mysqli_fetch_assoc($result);
 
 //получаем информацию о всех проектах пользователя с учетом всех невыполненных задач в каждом из проектов
-$sql = 'SELECT cat.category_id, cat.category_name, COUNT(CASE WHEN t.task_status = 0 THEN 1 ELSE NULL END) as count_task_id FROM category cat LEFT JOIN task t ON cat.category_id = t.category_id WHERE cat.user_id =' .$user_id .' GROUP BY cat.category_id, cat.category_name';
-$result = mysqli_query($mysqli, $sql);
-if (!$result) {
-    $error = mysqli_error($mysqli);
-    die('Error : ('. $error .')');
-}
-
-$categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+$categories = user_projects_with_open_tasks($user_id, $mysqli);
 
 
 //получаем список задач для вывода на странице
@@ -29,31 +22,23 @@ $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
 $selected_category = 0;
 
 if (isset($_GET['category'])) {
+
     $selected_category = intval($_GET['category']);
 
-    $sql = 'SELECT * FROM category WHERE user_id = ' . $user_id . ' AND category_id = ' . $selected_category;
+    $selected_category_exists = user_project_verification($user_id,  $selected_category, $mysqli);
 
-    $result = mysqli_query($mysqli, $sql);
-
-    if (!$result) {
-        $error = mysqli_error($mysqli);
-        die('Извините, сайт временно не доступен. Ведутся технические работы.');
-    }
-
-    $selected_category_exists = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-    if (count($selected_category_exists) == 0) {
+    if(!$selected_category_exists) {
         http_response_code(404);
         echo 'Упс. Страница не найдена';
         die();
     }
+
 }
 
 $sql = 'SELECT * FROM `task` ORDER BY `creation_date` DESC ';
 if ($selected_category > 0) {
     $sql = ' SELECT * FROM `task` WHERE category_id =' . $selected_category .' ORDER BY `creation_date` DESC ';
 }
-
 
 $result = mysqli_query($mysqli, $sql);
 
