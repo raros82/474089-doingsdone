@@ -46,22 +46,22 @@ if (!empty($_POST)) {
             $filename_id = uniqid();
             $add_task['file_path'] = 'uploads/' .$filename_id . '_' . $_FILES['preview']['name'];
             move_uploaded_file($_FILES['preview']['tmp_name'], $add_task['file_path']);
-            $sql = 'INSERT INTO task (category_id, task_name, file_atach, deadline) VALUES (?, ?, ?, ?)';
-            $stmt = db_get_prepare_stmt($mysqli, $sql, [$add_task['project'], $add_task['name'], $add_task['file_path'], $add_task['date']]);
-            $res = mysqli_stmt_execute($stmt);
         }
         else {
-            $sql = 'INSERT INTO task (category_id, task_name, deadline) VALUES (?, ?, ?)';
-            $stmt = db_get_prepare_stmt($mysqli, $sql, [$add_task['project'], $add_task['name'], $add_task['date']]);
-            $res = mysqli_stmt_execute($stmt);
+            $add_task['file_path'] = null;
         }
+
+        $sql = 'INSERT INTO task (category_id, task_name, file_atach, deadline) VALUES (?, ?, ?, ?)';
+        $stmt = mysqli_prepare($mysqli, $sql);
+        mysqli_stmt_bind_param ($stmt, 'ssss' , $add_task['project'], $add_task['name'], $add_task['file_path'], $add_task['date']);
+        $res = mysqli_stmt_execute($stmt);
+
         //редирект на главную страницу
         header('Location: /');
         exit();
 
     }
 }
-
 
 $page_content = include_template('add.php', ['add_task' => $add_task, 'errors' => $errors, 'categories' => $categories]);
 
