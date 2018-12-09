@@ -107,3 +107,14 @@ function user_projects_with_open_tasks($user, $bd_link){
     $user_projects_with_open_tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
     return $user_projects_with_open_tasks;
 }
+
+function user_info ($user, $bd_link){
+    $sql = 'SELECT * FROM user WHERE user_id = ' . $user;
+    $result = mysqli_query($bd_link, $sql);
+    if (!$result) {
+        $error = mysqli_error($bd_link);
+        die('Error : (' . $error . ')');
+    }
+    $user_info = mysqli_fetch_assoc($result);
+    return $user_info;
+}

@@ -3,15 +3,9 @@ require_once('init.php');
 
 $user_id = 1;
 
-//получаем данные о пользователе
-$sql = 'SELECT * FROM user WHERE user_id = ' . $user_id;
-$result = mysqli_query($mysqli, $sql);
-if (!$result) {
-    $error = mysqli_error($mysqli);
-    die('Error : ('. $error .')');
-}
 
-$user = mysqli_fetch_assoc($result);
+//получаем данные о пользователе
+$user = user_info($user_id, $mysqli);
 
 //получаем информацию о всех проектах пользователя с учетом всех невыполненных задач в каждом из проектов
 $categories = user_projects_with_open_tasks($user_id, $mysqli);
