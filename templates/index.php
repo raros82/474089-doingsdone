@@ -32,7 +32,7 @@
                     </label>
                 </td>
                 <td class="task__date"><?php deadline($tasks_value['deadline']); ?></td>
-                <td class="task__controls"> </td>
+                <td class="task__controls"><a href="<?php echo $tasks_value['file_atach']; ?> " target="_blank"> <?php if(isset($tasks_value['file_atach'])){echo 'файл';} ?> </a></td>
             </tr>
         <?php endif; ?>
     <?php endforeach; ?>
