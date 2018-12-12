@@ -47,8 +47,13 @@ if (!empty($_POST)) {
             $add_task['file_path'] = 'uploads/' .$filename_id . '_' . $_FILES['preview']['name'];
             move_uploaded_file($_FILES['preview']['tmp_name'], $add_task['file_path']);
         }
+
         else {
             $add_task['file_path'] = null;
+        }
+
+        if(empty($add_task['date'])){
+            $add_task['date'] = null;
         }
 
         $sql = 'INSERT INTO task (category_id, task_name, file_atach, deadline) VALUES (?, ?, ?, ?)';

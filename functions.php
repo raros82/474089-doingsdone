@@ -26,9 +26,9 @@ function esc($str) {
 
 
 function leeway($term){
-    $b_time = is_numeric(strtotime($term));
+    $b_time = strtotime($term);
 
-    if ($b_time && $term != "0000-00-00 00:00:00") {
+    if ($b_time !== FALSE) {
         $curdate = time();
         $a_time = strtotime($term) - $curdate;
         if ($a_time <= 86400) {
@@ -39,8 +39,9 @@ function leeway($term){
 }
 
 
+
 function deadline($deadline) {
-    if(!is_null($deadline) && $deadline != "0000-00-00 00:00:00" ) {
+    if(!is_null($deadline)) {
         $deadline_date = strtotime($deadline);
         echo date("d.m.Y",$deadline_date);
     }

@@ -29,10 +29,11 @@ if (isset($_GET['category'])) {
 
 }
 
-$sql = 'SELECT * FROM `task` ORDER BY `creation_date` DESC ';
+$sql = 'SELECT * FROM `task`';
 if ($selected_category > 0) {
-    $sql = ' SELECT * FROM `task` WHERE category_id =' . $selected_category .' ORDER BY `creation_date` DESC ';
+    $sql = ' SELECT * FROM `task` WHERE category_id =' . $selected_category;
 }
+$sql .=' ORDER BY `creation_date` DESC ';
 
 $result = mysqli_query($mysqli, $sql);
 
@@ -54,8 +55,6 @@ $layout_content = include_template('layout.php', [
     'content' => $page_content,
     'user' => $user
 ]);
-
-
 
 
 print($layout_content);
