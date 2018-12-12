@@ -18,17 +18,17 @@ if (!empty($_POST)) {
     }
 
     //проверка длины имени
-    if (!empty($form['name']) && iconv_strlen($form['name']) > 50) {
+    if (empty($errors['name']) && iconv_strlen($form['name']) > 50) {
         $errors['name'] = 'Имя не должно превышать 50 символов.';
     }
 
     //проверка длины email
-    if (!empty($form['email']) && iconv_strlen($form['email']) > 128) {
+    if (empty($errors['email']) && iconv_strlen($form['email']) > 128) {
         $errors['email'] = 'Email не должен превышать 128 символов.';
     }
 
     //проверка корректности email
-    if (!empty($form['email']) && filter_var($form['email'], FILTER_VALIDATE_EMAIL) === FALSE) {
+    if (empty($errors['email']) && filter_var($form['email'], FILTER_VALIDATE_EMAIL) === FALSE) {
         $errors['email'] = 'Введите корректный e-mail.';
     }
 
@@ -51,7 +51,7 @@ if (!empty($_POST)) {
         mysqli_stmt_bind_param($stmt, 'sss', $form['email'], $password, $form['name']);
         $res = mysqli_stmt_execute($stmt);
 
-        if ($res && empty($errors)) {
+        if ($res) {
             //header("Location: /enter.php"); // редирект на страницу входа
             header('Location: /'); // временный редирект на главную страницу для проверки работоспособности кода
             exit();
