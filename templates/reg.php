@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title><?=$title;?></title>
     <link rel="stylesheet" href="../css/normalize.css">
     <link rel="stylesheet" href="../css/style.css">
 </head>
@@ -37,21 +37,21 @@
                         <label class="form__label" for="email">E-mail <sup>*</sup></label>
 
                         <input class="form__input <?php if (isset($errors['email'])): ?>form__input--error<?php endif; ?>" type="text" name="email" id="email" value="<?=$values['email'] ?? ''; ?>" placeholder="Введите e-mail">
-                        <?php if (isset($errors['email'])): ?><p class="form__message"><?php echo $errors['email'];?></p><?php endif; ?>
+                        <?php if (isset($errors['email'])): ?><p class="form__message"><?=$errors['email'];?></p><?php endif; ?>
                     </div>
 
                     <div class="form__row">
                         <label class="form__label" for="password">Пароль <sup>*</sup></label>
 
                         <input class="form__input <?php if (isset($errors['password'])): ?>form__input--error<?php endif; ?>" type="password" name="password" id="password" value="" placeholder="Введите пароль">
-                        <?php if (isset($errors['password'])): ?><p class="form__message"><?php echo $errors['password'];?></p><?php endif; ?>
+                        <?php if (isset($errors['password'])): ?><p class="form__message"><?=$errors['password'];?></p><?php endif; ?>
                     </div>
 
                     <div class="form__row">
                         <label class="form__label" for="name">Имя <sup>*</sup></label>
 
                         <input class="form__input <?php if (isset($errors['name'])): ?>form__input--error<?php endif; ?>" type="text" name="name" id="name" value="<?=$values['name'] ?? ''; ?>" placeholder="Введите имя">
-                        <?php if (isset($errors['name'])): ?><p class="form__message"><?php echo $errors['name'];?></p><?php endif; ?>
+                        <?php if (isset($errors['name'])): ?><p class="form__message"><?=$errors['name'];?></p><?php endif; ?>
                     </div>
 
                     <div class="form__row form__row--controls">
