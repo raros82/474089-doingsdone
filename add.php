@@ -1,7 +1,13 @@
 <?php
 require_once('init.php');
+session_start();
 
-$user_id = 1;
+if (!isset($_SESSION['user'])){
+    header("Location:/");
+    exit();
+}
+
+$user_id = $_SESSION['user']['user_id'];
 
 
 //получаем данные о пользователе
@@ -27,7 +33,7 @@ if (!empty($_POST)) {
     }
 
    //проверка существования проекта
-    if (!empty($add_task['project']) && user_project_verification($user_id, $add_task['project'], $mysqli ) == FALSE){
+    if (!empty($add_task['project']) && user_project_verification($user_id, $add_task['project'], $mysqli ) === NULL){
         $errors['project'] = 'Выбранный проект не существует';
     }
 

@@ -58,7 +58,8 @@ function user_project_verification($user, $project, $bd_link) {
         $error = mysqli_error($bd_link);
         die('Error : ('. $error .')');
     }
-    return $result;
+    $user_project_verification = mysqli_fetch_assoc($result);
+    return $user_project_verification;
 }
 
 //функция возвращает информацию о всех проектах пользователя с учетом всех невыполненных задач в каждом из проектов

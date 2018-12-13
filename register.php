@@ -52,8 +52,7 @@ if (!empty($_POST)) {
         $res = mysqli_stmt_execute($stmt);
 
         if ($res) {
-            //header("Location: /enter.php"); // редирект на страницу входа
-            header('Location: /'); // временный редирект на главную страницу для проверки работоспособности кода
+            header("Location: /auth.php"); // редирект на страницу входа
             exit();
         }
     }
@@ -61,7 +60,13 @@ if (!empty($_POST)) {
     $reg_data['errors'] = $errors;
     $reg_data['values'] = $form;
 }
-$reg_data['title'] = 'Дела в порядке / Регистрация';
+//$reg_data['title'] = 'Дела в порядке / Регистрация';
 $page_content = include_template('reg.php', $reg_data);
 
-print($page_content);
+$layout_content = include_template('layout.php', [
+    'title' => 'Дела в порядке',
+    'content' => $page_content
+]);
+
+
+print($layout_content);
