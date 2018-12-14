@@ -60,7 +60,7 @@ if (!empty($_POST)) {
     $reg_data['errors'] = $errors;
     $reg_data['values'] = $form;
 }
-//$reg_data['title'] = 'Дела в порядке / Регистрация';
+
 $page_content = include_template('reg.php', $reg_data);
 
 $layout_content = include_template('layout.php', [

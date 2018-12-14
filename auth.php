@@ -1,11 +1,16 @@
 <?php
 require_once('init.php');
 
-session_start();
+if($user){
+        header("Location:/");
+        exit();
+}
+
+$form = [];
+$errors = [];
 
 if (!empty($_POST)) {
-    $form = [];
-    $errors = [];
+
     $required = ['email', 'password'];
 
     foreach ($required as $key) {
@@ -17,50 +22,39 @@ if (!empty($_POST)) {
         }
     }
 
-    if(!empty($form['email']) && !empty($form['password'])) {
+    $user = [];
 
+    if (!count($errors)) {
         $email = mysqli_real_escape_string($mysqli, $form['email']);
         $sql = "SELECT * FROM user WHERE email = '$email'";
         $res = mysqli_query($mysqli, $sql);
 
         $user = $res ? mysqli_fetch_array($res, MYSQLI_ASSOC) : null;
-
-
-        if (!count($errors) and $user) {
-            if (password_verify($form['password'], $user['password'])) {
-                $_SESSION['user'] = $user;
-            }
-            else {
-                $errors['password'] = 'Неверный пароль';
-            }
-        }
-        else {
+        if (!$user) {
             $errors['email'] = 'Такой пользователь не найден';
         }
     }
 
-    if(count($errors)){
-        $page_content = include_template('auth.php', ['form' => $form, 'errors' => $errors]);
+    if (!count($errors)) {
+        if (password_verify($form['password'], $user['password'])) {
+            $_SESSION['user'] = $user;
+        } else {
+            $errors['password'] = 'Неверный пароль';
+        }
     }
-    else {
-        header("Location:/"); // куда переход???
+
+    if(!count($errors)){
+        header("Location:/");
         exit();
     }
-}
-else {
-    if(isset($_SESSION['user'])){
-        $page_content = include_template('index.php', ['user' => $user]);
-    }
-    else{
-        $page_content = include_template('auth.php', []);
-    }
+
 }
 
-
+$page_content = include_template('auth.php', ['form' => $form, 'errors' => $errors]);
 $layout_content = include_template('layout.php', [
     'title' => 'Дела в порядке',
     'content' => $page_content
-]);
+    ]);
 
 
 print($layout_content);
