@@ -18,6 +18,54 @@ $user_id = $user['user_id'];
 $categories = user_projects_with_open_tasks($user_id, $mysqli);
 
 
+if(isset($_GET['task_id'])){
+    $task_checked = intval($_GET['task_id']);
+
+    $task_checked_exist = user_task_verification($user_id, $task_checked, $mysqli);
+
+    if (!$task_checked_exist) {
+        http_response_code(404);
+        echo 'Упс. Страница не найдена';
+        die();
+    }
+
+    $sql = 'SELECT * FROM task WHERE task_id = ' . $task_checked;
+    $result = mysqli_query($mysqli, $sql);
+
+
+    if (!$result) {
+        $error = mysqli_error($mysqli);
+        echo 'Ошибка Базы данных - задача не обнаружена';
+        die();
+    }
+    else{
+        $task_checked = mysqli_fetch_assoc($result);
+        header ("Location:/");
+
+    }
+
+    if ($task_checked && isset($_GET['check'])) {
+
+        $task_checked_status = intval($_GET['check']);
+        if($task_checked_status !== 0){
+            $task_checked_status = 1;
+        }
+
+        $sql = "UPDATE task SET task_status = $task_checked_status  WHERE task_id =  " . $task_checked['task_id'];
+//        print ($sql);
+        $result = mysqli_query($mysqli, $sql);
+
+        if (!$result) {
+            $error = mysqli_error($mysqli);
+            echo 'Ошибка Базы данных';
+            die();
+        }
+    }
+
+}
+
+
+
 //получаем список задач для вывода на странице
 $selected_category = 0;
 if (isset($_GET['category'])) {
@@ -49,6 +97,9 @@ if (!$result) {
 else{
     $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
+
+
+
 
 $page_content = include_template('index.php', ['tasks' => $tasks, 'show_complete_tasks' => $show_complete_tasks]);
 
