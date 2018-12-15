@@ -17,7 +17,7 @@
 
         <?php if(isset($user)): ?>
         <header class="main-header">
-            <a href="index.php">
+            <a href="index.php/?category=none">
                 <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
             </a>
 

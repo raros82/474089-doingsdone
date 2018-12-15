@@ -7,11 +7,12 @@
 </form>
 
 <div class="tasks-controls">
+    <?php $filter =  $_SESSION['task_filter'];?>
     <nav class="tasks-switch">
-        <a href="/" class="tasks-switch__item tasks-switch__item--active">Все задачи</a>
-        <a href="/" class="tasks-switch__item">Повестка дня</a>
-        <a href="/" class="tasks-switch__item">Завтра</a>
-        <a href="/" class="tasks-switch__item">Просроченные</a>
+        <a href="/?filter=all_tasks" class="tasks-switch__item <?php if($filter == 'all_tasks' ) : ?>tasks-switch__item--active<?php endif; ?>">Все задачи</a>
+        <a href="/?filter=agenda" class="tasks-switch__item <?php if($filter == 'agenda' ) : ?>tasks-switch__item--active<?php endif; ?>">Повестка дня</a>
+        <a href="/?filter=tomorrow" class="tasks-switch__item <?php if($filter == 'tomorrow' ) : ?>tasks-switch__item--active<?php endif; ?>">Завтра</a>
+        <a href="/?filter=overdue" class="tasks-switch__item <?php if($filter == 'overdue' ) : ?>tasks-switch__item--active<?php endif; ?>">Просроченные</a>
     </nav>
 
     <label class="checkbox">
