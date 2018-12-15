@@ -64,6 +64,7 @@ if(isset($_GET['task_id'])){
 $categories = user_projects_with_open_tasks($user_id, $mysqli);
 
 
+
 //получаем список задач для вывода на странице
 $selected_category = 0;
 if (isset($_GET['category'])) {
@@ -74,12 +75,7 @@ if (isset($_GET['category'])) {
 
     if (!$selected_category_exists) {
         unset($_SESSION['category']);
-        if (isset($_SESSION['task_filter'])){
-            $session_filter = $_SESSION['task_filter'];
-            header("Location:/?filter=".$session_filter);
-            exit();
-        }
-        header("Location:/");
+        header("Location:/?filter=all_tasks");
         exit();
     } else {
         $_SESSION['category'] = $selected_category;
