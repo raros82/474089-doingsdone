@@ -38,16 +38,14 @@ if (!empty($_POST)) {
     if (!count($errors)) {
         if (password_verify($form['password'], $user['password'])) {
             $_SESSION['user'] = $user;
+
+            header("Location:/");
+            exit();
+
         } else {
             $errors['password'] = 'Неверный пароль';
         }
     }
-
-    if(!count($errors)){
-        header("Location:/");
-        exit();
-    }
-
 }
 
 $page_content = include_template('auth.php', ['form' => $form, 'errors' => $errors]);

@@ -8,6 +8,7 @@
 
 <div class="tasks-controls">
     <?php $filter =  $_SESSION['task_filter'];?>
+
     <nav class="tasks-switch">
         <a href="/?filter=all_tasks" class="tasks-switch__item <?php if($filter == 'all_tasks' ) : ?>tasks-switch__item--active<?php endif; ?>">Все задачи</a>
         <a href="/?filter=agenda" class="tasks-switch__item <?php if($filter == 'agenda' ) : ?>tasks-switch__item--active<?php endif; ?>">Повестка дня</a>
