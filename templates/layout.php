@@ -15,9 +15,9 @@
 <div class="page-wrapper">
     <div class="container <?php if (!isset($guest_layout)): ?>container--with-sidebar<?php endif; ?>">
 
-        <?php if(isset($_SESSION['user'])): ?>
+        <?php if(isset($user)): ?>
         <header class="main-header">
-            <a href="index.php">
+            <a href="index.php/?category=none">
                 <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
             </a>
 
@@ -30,7 +30,7 @@
                     </div>
 
                     <div class="user-menu__data">
-                        <p><?=$_SESSION['user']['name'];?> </p>
+                        <p><?=$user['name'];?> </p>
 
                         <a href="/logout.php">Выйти</a>
                     </div>
@@ -68,7 +68,7 @@
             </header>
         <?php endif; ?>
             <main class="content__main">
-                <?php if(isset($content)){echo $content;} ;?>
+                <?=$content ?? '';?>
             </main>
         </div>
     </div>
@@ -82,7 +82,7 @@
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
 
-        <?php if(isset($_SESSION['user'])): ?>
+        <?php if(isset($user)): ?>
         <a class="main-footer__button button button--plus" href="add.php">Добавить задачу</a>
         <?php endif; ?>
 

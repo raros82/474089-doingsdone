@@ -1,17 +1,13 @@
 <?php
 require_once('init.php');
-session_start();
 
-if (!isset($_SESSION['user'])){
+if (!$user){
     header("Location:/");
     exit();
 }
 
-$user_id = $_SESSION['user']['user_id'];
+$user_id = $user['user_id'];;
 
-
-//получаем данные о пользователе
-$user = user_info($user_id, $mysqli);
 
 //получаем информацию о всех проектах пользователя с учетом всех невыполненных задач в каждом из проектов
 $categories = user_projects_with_open_tasks($user_id, $mysqli);

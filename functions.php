@@ -62,6 +62,21 @@ function user_project_verification($user, $project, $bd_link) {
     return $user_project_verification;
 }
 
+
+function user_task_verification($user, $task, $bd_link) {
+
+    $sql = 'SELECT task_id FROM task t JOIN category cat ON t.category_id = cat.category_id WHERE user_id = ' . $user . ' AND task_id = ' . intval($task);
+    $result = mysqli_query($bd_link, $sql);
+    if (!$result) {
+        $error = mysqli_error($bd_link);
+        die('Error : ('. $error .')');
+    }
+    $user_task_verification = mysqli_fetch_assoc($result);
+    return $user_task_verification;
+}
+
+
+
 //функция возвращает информацию о всех проектах пользователя с учетом всех невыполненных задач в каждом из проектов
 function user_projects_with_open_tasks($user, $bd_link){
     $sql = 'SELECT cat.category_id, cat.category_name, COUNT(CASE WHEN t.task_status = 0 THEN 1 ELSE NULL END) as count_task_id FROM category cat LEFT JOIN task t ON cat.category_id = t.category_id WHERE cat.user_id =' . $user . ' GROUP BY cat.category_id, cat.category_name';
