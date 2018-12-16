@@ -141,6 +141,34 @@ else{
     $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
+
+
+//полнотекстовый поиск
+if(isset($_GET['search'])) {
+    $search = $_GET['search'];
+
+    $sql = "SELECT * FROM task t JOIN category cat ON t.category_id = cat.category_id WHERE user_id = $user_id AND MATCH (task_name) AGAINST (?)";
+    $stmt = db_get_prepare_stmt($mysqli, $sql, [$search]);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    if(empty($tasks)) {
+        $layout_content = include_template('layout.php', [
+            'title' => 'Дела в порядке',
+            'categories' => $categories,
+            'content' => "По вашему запросу ничего не найдено",
+            'user' => $user,
+            'selected_category' => $selected_category
+        ]);
+        print($layout_content);
+        exit();
+    }
+}
+
+
+
 $page_content = include_template('index.php', ['tasks' => $tasks, 'show_complete_tasks' => $show_complete_tasks]);
 
 $layout_content = include_template('layout.php', [
