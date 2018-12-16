@@ -30,3 +30,4 @@ CREATE TABLE `task` (
 );
 
 CREATE INDEX `task_index` ON `task` (`task_name`);
+CREATE FULLTEXT INDEX task_ft_search ON task(task_name);
