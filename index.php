@@ -36,7 +36,6 @@ if(isset($_GET['task_id'])){
     }
     else{
         $task_checked = mysqli_fetch_assoc($result);
-        header ("Location:/");
 
     }
 
@@ -93,23 +92,31 @@ if (isset($_GET['filter']) && $_GET['filter'] == 'all_tasks'){
 if (isset($_GET['filter']) && $_GET['filter'] == 'agenda'){
     $active_filter = 'agenda';
     $_SESSION['task_filter'] = $active_filter;
-    $sql .= ' AND DAY(deadline) = DAY(NOW())';
 }
 
 if (isset($_GET['filter']) && $_GET['filter'] == 'tomorrow'){
     $active_filter = 'tomorrow';
     $_SESSION['task_filter'] = $active_filter;
-    $sql .= ' AND DAY(deadline) = DAY(TOMORROW())';
 }
 
 if (isset($_GET['filter']) && $_GET['filter'] == 'overdue'){
     $active_filter = 'overdue';
     $_SESSION['task_filter'] = $active_filter;
-    $sql .= ' AND DAY(deadline) < DAY(NOW())';
 }
 
 if (isset($_SESSION['task_filter'])) {
-    $active_filter = $_SESSION['task_filter'];
+    switch($_SESSION['task_filter']) {
+    case "agenda":
+        $sql .= ' AND DAY(deadline) = DAY(NOW())';
+        break;
+    case "tomorrow":
+        $sql .= ' AND DAY(deadline) = DAY(NOW() + INTERVAL 1 DAY)';
+        break;
+    case "overdue":
+        $sql .= ' AND DAY(deadline) < DAY(NOW())';
+        break;
+    }
+
 } else {
     $active_filter = 'all_tasks';
     $_SESSION['task_filter'] = $active_filter;
