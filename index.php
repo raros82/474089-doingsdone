@@ -155,19 +155,9 @@ if(isset($_GET['search'])) {
     $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
     if(empty($tasks)) {
-        $layout_content = include_template('layout.php', [
-            'title' => 'Дела в порядке',
-            'categories' => $categories,
-            'content' => "По вашему запросу ничего не найдено",
-            'user' => $user,
-            'selected_category' => $selected_category
-        ]);
-        print($layout_content);
-        exit();
+        $tasks = [];
     }
 }
-
-
 
 $page_content = include_template('index.php', ['tasks' => $tasks, 'show_complete_tasks' => $show_complete_tasks]);
 

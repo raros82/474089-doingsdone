@@ -22,7 +22,7 @@
         <span class="checkbox__text">Показывать выполненные</span>
     </label>
 </div>
-
+<?php if(!empty($tasks)) : ?>
 <table class="tasks">
     <?php foreach ($tasks as $tasks_key => $tasks_value): ?>
         <?php if ($show_complete_tasks == 1 OR $tasks_value['task_status'] == 0) : ?>
@@ -40,3 +40,5 @@
         <?php endif; ?>
     <?php endforeach; ?>
 </table>
+<?php else: echo "По вашему запросу ничего не найдено"; ?>
+<?php endif; ?>
