@@ -1,9 +1,9 @@
 <?php
 require_once('init.php');
 
-if($user){
-        header("Location:/");
-        exit();
+if ($user) {
+    header("Location:/");
+    exit();
 }
 
 $form = [];
@@ -38,23 +38,21 @@ if (!empty($_POST)) {
     if (!count($errors)) {
         if (password_verify($form['password'], $user['password'])) {
             $_SESSION['user'] = $user;
+
+            header("Location:/");
+            exit();
+
         } else {
             $errors['password'] = 'Неверный пароль';
         }
     }
-
-    if(!count($errors)){
-        header("Location:/");
-        exit();
-    }
-
 }
 
 $page_content = include_template('auth.php', ['form' => $form, 'errors' => $errors]);
 $layout_content = include_template('layout.php', [
     'title' => 'Дела в порядке',
     'content' => $page_content
-    ]);
+]);
 
 
 print($layout_content);

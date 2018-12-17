@@ -1,0 +1,12 @@
+{
+    "name": "raros/doingsdone",
+    "authors": [
+        {
+            "name": "raros82",
+            "email": "raros82@gmail.com"
+        }
+    ],
+    "require": {
+        "swiftmailer/swiftmailer": "^6.1"
+    }
+}

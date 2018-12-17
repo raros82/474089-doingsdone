@@ -5,6 +5,7 @@ USE `474089-doingsdone`;
 
 create table `user` (
 	`user_id` INT AUTO_INCREMENT PRIMARY KEY,
+	`registration_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	`name` VARCHAR(50),
 	`email` VARCHAR(128) UNIQUE NOT NULL,
 	`password` VARCHAR(64)
@@ -30,3 +31,4 @@ CREATE TABLE `task` (
 );
 
 CREATE INDEX `task_index` ON `task` (`task_name`);
+CREATE FULLTEXT INDEX task_ft_search ON task(task_name);
