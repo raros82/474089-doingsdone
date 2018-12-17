@@ -126,6 +126,15 @@ if (isset($_SESSION['category']) && $_SESSION['category'] > 0) {
     $sql .= ' AND t.category_id =' . $selected_category;
 }
 
+//полнотекстовый поиск
+if (isset($_GET['search'])) {
+    $search = trim(mysqli_real_escape_string($mysqli, $_GET['search']));
+
+    if (!empty($search)) {
+        $sql .= " AND MATCH (task_name) AGAINST ('$search')";
+    }
+}
+
 
 $sql .= ' ORDER BY creation_date DESC ';
 
@@ -140,24 +149,6 @@ if (!$result) {
 }
 
 
-//полнотекстовый поиск
-if (isset($_GET['search'])) {
-    $search = trim($_GET['search']);
-
-    if (!empty($search)) {
-
-        $sql = "SELECT * FROM task t JOIN category cat ON t.category_id = cat.category_id WHERE user_id = $user_id AND MATCH (task_name) AGAINST (?)";
-        $stmt = db_get_prepare_stmt($mysqli, $sql, [$search]);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-
-        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-        if (empty($tasks)) {
-            $tasks = [];
-        }
-    }
-}
 
 $page_content = include_template('index.php', ['tasks' => $tasks, 'show_complete_tasks' => $show_complete_tasks]);
 
