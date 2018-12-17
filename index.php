@@ -14,6 +14,18 @@ if (!$user) {
 
 $user_id = $user['user_id'];
 
+$show_complete_values = [0, 1];
+if (isset($_GET['show_completed']) && in_array(isset($_GET['show_completed']), $show_complete_values)) {
+    $show_complete_tasks = $_GET['show_completed'];
+    $_SESSION['show_completed'] = $show_complete_tasks;
+}
+
+if (isset($_SESSION['show_completed'])) {
+    $show_complete_tasks = $_SESSION['show_completed'];
+} else {
+    $show_complete_tasks = 0;
+}
+
 //чекбоксы задач - изменение статуса задачи выполненная/невыполненная
 if (isset($_GET['task_id'])) {
     $task_checked = intval($_GET['task_id']);
@@ -26,36 +38,19 @@ if (isset($_GET['task_id'])) {
         die();
     }
 
-    $sql = 'SELECT * FROM task WHERE task_id = ' . $task_checked;
-    $result = mysqli_query($mysqli, $sql);
+    $task_checked_status = intval($_GET['check']);
+    if ($task_checked_status !== 0) {
+        $task_checked_status = 1;
+    }
 
+    $sql = "UPDATE task SET task_status = $task_checked_status  WHERE task_id =  " . $task_checked_exist['task_id'];
+    $result = mysqli_query($mysqli, $sql);
 
     if (!$result) {
         $error = mysqli_error($mysqli);
-        echo 'Ошибка Базы данных - задача не обнаружена';
+        echo 'Ошибка Базы данных';
         die();
-    } else {
-        $task_checked = mysqli_fetch_assoc($result);
-
     }
-
-    if ($task_checked && isset($_GET['check'])) {
-
-        $task_checked_status = intval($_GET['check']);
-        if ($task_checked_status !== 0) {
-            $task_checked_status = 1;
-        }
-
-        $sql = "UPDATE task SET task_status = $task_checked_status  WHERE task_id =  " . $task_checked['task_id'];
-        $result = mysqli_query($mysqli, $sql);
-
-        if (!$result) {
-            $error = mysqli_error($mysqli);
-            echo 'Ошибка Базы данных';
-            die();
-        }
-    }
-
 }
 
 
