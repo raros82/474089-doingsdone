@@ -28,7 +28,7 @@ if (!empty($_POST)) {
     }
 
     //проверка корректности email
-    if (empty($errors['email']) && filter_var($form['email'], FILTER_VALIDATE_EMAIL) === FALSE) {
+    if (empty($errors['email']) && filter_var($form['email'], FILTER_VALIDATE_EMAIL) === false) {
         $errors['email'] = 'Введите корректный e-mail.';
     }
 

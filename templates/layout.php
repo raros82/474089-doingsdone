@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title><?=$title;?></title>
+    <title><?= $title; ?></title>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/flatpickr.min.css">
@@ -15,7 +15,7 @@
 <div class="page-wrapper">
     <div class="container <?php if (!isset($guest_layout)): ?>container--with-sidebar<?php endif; ?>">
 
-        <?php if(isset($user)): ?>
+        <?php if (isset($user)): ?>
         <header class="main-header">
             <a href="index.php/?category=none">
                 <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
@@ -30,7 +30,7 @@
                     </div>
 
                     <div class="user-menu__data">
-                        <p><?=$user['name'];?> </p>
+                        <p><?= $user['name']; ?> </p>
 
                         <a href="/logout.php">Выйти</a>
                     </div>
@@ -45,9 +45,10 @@
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
                         <?php foreach ($categories as $category_value): ?>
-                            <li class="main-navigation__list-item <?php if($category_value['category_id'] == $selected_category ) :?>main-navigation__list-item--active<?php endif; ?>">
-                                <a class="main-navigation__list-item-link" href="/?category=<?=$category_value['category_id'];?>"><?=$category_value['category_name'];?></a>
-                                <span class="main-navigation__list-item-count"><?=$category_value['count_task_id']; ?></span>
+                            <li class="main-navigation__list-item <?php if ($category_value['category_id'] == $selected_category) : ?>main-navigation__list-item--active<?php endif; ?>">
+                                <a class="main-navigation__list-item-link"
+                                   href="/?category=<?= $category_value['category_id']; ?>"><?= $category_value['category_name']; ?></a>
+                                <span class="main-navigation__list-item-count"><?= $category_value['count_task_id']; ?></span>
                             </li>
                         <?php endforeach; ?>
                     </ul>
@@ -56,19 +57,19 @@
                 <a class="button button--transparent button--plus content__side-button"
                    href="add_project.php">Добавить проект</a>
             </section>
-        <?php else: ?>
-            <header class="main-header">
-                <a href="/">
-                    <img src="../img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
-                </a>
+            <?php else: ?>
+                <header class="main-header">
+                    <a href="/">
+                        <img src="../img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
+                    </a>
 
-                <div class="main-header__side">
-                    <a class="main-header__side-item button button--transparent" href="auth.php">Войти</a>
-                </div>
-            </header>
-        <?php endif; ?>
+                    <div class="main-header__side">
+                        <a class="main-header__side-item button button--transparent" href="auth.php">Войти</a>
+                    </div>
+                </header>
+            <?php endif; ?>
             <main class="content__main">
-                <?=$content ?? '';?>
+                <?= $content ?? ''; ?>
             </main>
         </div>
     </div>
@@ -82,8 +83,8 @@
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
 
-        <?php if(isset($user)): ?>
-        <a class="main-footer__button button button--plus" href="add.php">Добавить задачу</a>
+        <?php if (isset($user)): ?>
+            <a class="main-footer__button button button--plus" href="add.php">Добавить задачу</a>
         <?php endif; ?>
 
         <div class="main-footer__social social">

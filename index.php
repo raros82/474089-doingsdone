@@ -4,9 +4,10 @@ require_once('init.php');
 if (!$user) {
     $page_content = include_template('guest.php', []);
     $layout_content = include_template('layout.php', [
-    'title' => 'Дела в порядке',
-    'content' => $page_content,
-    'guest_layout' => true]);
+        'title' => 'Дела в порядке',
+        'content' => $page_content,
+        'guest_layout' => true
+    ]);
     print($layout_content);
     exit();
 }
@@ -14,7 +15,7 @@ if (!$user) {
 $user_id = $user['user_id'];
 
 //чекбоксы задач - изменение статуса задачи выполненная/невыполненная
-if(isset($_GET['task_id'])){
+if (isset($_GET['task_id'])) {
     $task_checked = intval($_GET['task_id']);
 
     $task_checked_exist = user_task_verification($user_id, $task_checked, $mysqli);
@@ -33,8 +34,7 @@ if(isset($_GET['task_id'])){
         $error = mysqli_error($mysqli);
         echo 'Ошибка Базы данных - задача не обнаружена';
         die();
-    }
-    else{
+    } else {
         $task_checked = mysqli_fetch_assoc($result);
 
     }
@@ -42,7 +42,7 @@ if(isset($_GET['task_id'])){
     if ($task_checked && isset($_GET['check'])) {
 
         $task_checked_status = intval($_GET['check']);
-        if($task_checked_status !== 0){
+        if ($task_checked_status !== 0) {
             $task_checked_status = 1;
         }
 
@@ -61,7 +61,6 @@ if(isset($_GET['task_id'])){
 
 //получаем информацию о всех проектах пользователя с учетом всех невыполненных задач в каждом из проектов
 $categories = user_projects_with_open_tasks($user_id, $mysqli);
-
 
 
 //получаем список задач для вывода на странице
@@ -84,37 +83,37 @@ if (isset($_GET['category'])) {
 $sql = 'SELECT * FROM task t JOIN category cat ON t.category_id = cat.category_id WHERE user_id = ' . $user_id;
 
 
-if (isset($_GET['filter']) && $_GET['filter'] == 'all_tasks'){
+if (isset($_GET['filter']) && $_GET['filter'] == 'all_tasks') {
     $active_filter = 'all_tasks';
     $_SESSION['task_filter'] = $active_filter;
 }
 
-if (isset($_GET['filter']) && $_GET['filter'] == 'agenda'){
+if (isset($_GET['filter']) && $_GET['filter'] == 'agenda') {
     $active_filter = 'agenda';
     $_SESSION['task_filter'] = $active_filter;
 }
 
-if (isset($_GET['filter']) && $_GET['filter'] == 'tomorrow'){
+if (isset($_GET['filter']) && $_GET['filter'] == 'tomorrow') {
     $active_filter = 'tomorrow';
     $_SESSION['task_filter'] = $active_filter;
 }
 
-if (isset($_GET['filter']) && $_GET['filter'] == 'overdue'){
+if (isset($_GET['filter']) && $_GET['filter'] == 'overdue') {
     $active_filter = 'overdue';
     $_SESSION['task_filter'] = $active_filter;
 }
 
 if (isset($_SESSION['task_filter'])) {
-    switch($_SESSION['task_filter']) {
-    case "agenda":
-        $sql .= ' AND DAY(deadline) = DAY(NOW())';
-        break;
-    case "tomorrow":
-        $sql .= ' AND DAY(deadline) = DAY(NOW() + INTERVAL 1 DAY)';
-        break;
-    case "overdue":
-        $sql .= ' AND DAY(deadline) < DAY(NOW())';
-        break;
+    switch ($_SESSION['task_filter']) {
+        case "agenda":
+            $sql .= ' AND DAY(deadline) = DAY(NOW())';
+            break;
+        case "tomorrow":
+            $sql .= ' AND DAY(deadline) = DAY(NOW() + INTERVAL 1 DAY)';
+            break;
+        case "overdue":
+            $sql .= ' AND DAY(deadline) < DAY(NOW())';
+            break;
     }
 
 } else {
@@ -122,7 +121,7 @@ if (isset($_SESSION['task_filter'])) {
     $_SESSION['task_filter'] = $active_filter;
 }
 
-if(isset($_SESSION['category']) && $_SESSION['category'] > 0 ){
+if (isset($_SESSION['category']) && $_SESSION['category'] > 0) {
     $selected_category = $_SESSION['category'];
     $sql .= ' AND t.category_id =' . $selected_category;
 }
@@ -136,26 +135,27 @@ $result = mysqli_query($mysqli, $sql);
 if (!$result) {
     $error = mysqli_error($mysqli);
     $tasks = [];
-}
-else{
+} else {
     $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
-
 
 
 //полнотекстовый поиск
-if(isset($_GET['search'])) {
-    $search = $_GET['search'];
+if (isset($_GET['search'])) {
+    $search = trim($_GET['search']);
 
-    $sql = "SELECT * FROM task t JOIN category cat ON t.category_id = cat.category_id WHERE user_id = $user_id AND MATCH (task_name) AGAINST (?)";
-    $stmt = db_get_prepare_stmt($mysqli, $sql, [$search]);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
+    if (!empty($search)) {
 
-    $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $sql = "SELECT * FROM task t JOIN category cat ON t.category_id = cat.category_id WHERE user_id = $user_id AND MATCH (task_name) AGAINST (?)";
+        $stmt = db_get_prepare_stmt($mysqli, $sql, [$search]);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
 
-    if(empty($tasks)) {
-        $tasks = [];
+        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        if (empty($tasks)) {
+            $tasks = [];
+        }
     }
 }
 
@@ -167,6 +167,6 @@ $layout_content = include_template('layout.php', [
     'content' => $page_content,
     'user' => $user,
     'selected_category' => $selected_category
-    ]);
+]);
 
 print($layout_content);

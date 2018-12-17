@@ -1,9 +1,9 @@
 <?php
 require_once('init.php');
 
-if($user){
-        header("Location:/");
-        exit();
+if ($user) {
+    header("Location:/");
+    exit();
 }
 
 $form = [];
@@ -52,7 +52,7 @@ $page_content = include_template('auth.php', ['form' => $form, 'errors' => $erro
 $layout_content = include_template('layout.php', [
     'title' => 'Дела в порядке',
     'content' => $page_content
-    ]);
+]);
 
 
 print($layout_content);

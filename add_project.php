@@ -1,7 +1,7 @@
 <?php
 require_once('init.php');
 
-if (!$user){
+if (!$user) {
     header("Location:/");
     exit();
 }
@@ -14,7 +14,6 @@ $categories = user_projects_with_open_tasks($user_id, $mysqli);
 
 $errors = [];
 $add_project = [];
-
 
 
 if (!empty($_POST)) {
@@ -31,12 +30,12 @@ if (!empty($_POST)) {
 
 
     //проверка длины названия проекта
-    if (!empty($add_project['project_name']) && iconv_strlen($add_project['project_name'])>128){
+    if (!empty($add_project['project_name']) && iconv_strlen($add_project['project_name']) > 128) {
         $errors['project_name'] = 'Превышена максимальная длина 128 символов';
     }
 
     //проверка существования проекта
-    if (!empty($add_project['project_name'])){
+    if (!empty($add_project['project_name'])) {
 
         $project = mysqli_real_escape_string($mysqli, $add_project['project_name']);
         $sql = "SELECT * FROM category WHERE user_id = '$user_id' AND category_name = '$project'";
@@ -49,11 +48,11 @@ if (!empty($_POST)) {
         }
     }
 
-    if(empty($errors)){
+    if (empty($errors)) {
 
         $sql = 'INSERT INTO category (user_id, category_name) VALUES (?, ?)';
         $stmt = mysqli_prepare($mysqli, $sql);
-        mysqli_stmt_bind_param ($stmt, 'is' , $user_id,$add_project['project_name']);
+        mysqli_stmt_bind_param($stmt, 'is', $user_id, $add_project['project_name']);
         $res = mysqli_stmt_execute($stmt);
 
         //редирект на главную страницу
