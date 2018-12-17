@@ -12,7 +12,7 @@ $mailer = new Swift_Mailer($transport);
 $logger = new Swift_Plugins_Loggers_ArrayLogger();
 $mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
 
-$sql = "SELECT cat.category_id, t.task_id AS task_id, t.task_name AS task, t.deadline AS deadline, u.name AS name, u.email AS email FROM category cat JOIN task t ON cat.category_id = t.category_id JOIN user u ON cat.user_id = u.user_id WHERE t.deadline >= NOW() AND t.deadline <= (NOW() + INTERVAL 1 HOUR);";
+$sql = "SELECT cat.category_id, t.task_id AS task_id, t.task_name AS task, t.deadline AS deadline, u.name AS name, u.email AS email FROM category cat JOIN task t ON cat.category_id = t.category_id JOIN user u ON cat.user_id = u.user_id WHERE t.task_status = 0 AND t.deadline >= NOW() AND t.deadline <= (NOW() + INTERVAL 1 HOUR);";
 
 $res = mysqli_query($mysqli, $sql);
 
