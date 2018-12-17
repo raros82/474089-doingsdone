@@ -28,7 +28,6 @@ CREATE TABLE `task` (
 	`file_atach` VARCHAR(200),
 	`deadline` DATETIME,
 	FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`)
+	FULLTEXT INDEX task_ft_search ON task(task_name);
 );
 
-CREATE INDEX `task_index` ON `task` (`task_name`);
-CREATE FULLTEXT INDEX task_ft_search ON task(task_name);

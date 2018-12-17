@@ -14,6 +14,18 @@ if (!$user) {
 
 $user_id = $user['user_id'];
 
+$show_complete_values = [0, 1];
+if (isset($_GET['show_completed']) && in_array(isset($_GET['show_completed']), $show_complete_values)) {
+    $show_complete_tasks = $_GET['show_completed'];
+    $_SESSION['show_completed'] = $show_complete_tasks;
+}
+
+if (isset($_SESSION['show_completed'])) {
+    $show_complete_tasks = $_SESSION['show_completed'];
+} else {
+    $show_complete_tasks = 0;
+}
+
 //чекбоксы задач - изменение статуса задачи выполненная/невыполненная
 if (isset($_GET['task_id'])) {
     $task_checked = intval($_GET['task_id']);
@@ -26,36 +38,19 @@ if (isset($_GET['task_id'])) {
         die();
     }
 
-    $sql = 'SELECT * FROM task WHERE task_id = ' . $task_checked;
-    $result = mysqli_query($mysqli, $sql);
+    $task_checked_status = intval($_GET['check']);
+    if ($task_checked_status !== 0) {
+        $task_checked_status = 1;
+    }
 
+    $sql = "UPDATE task SET task_status = $task_checked_status  WHERE task_id =  " . $task_checked_exist['task_id'];
+    $result = mysqli_query($mysqli, $sql);
 
     if (!$result) {
         $error = mysqli_error($mysqli);
-        echo 'Ошибка Базы данных - задача не обнаружена';
+        echo 'Ошибка Базы данных';
         die();
-    } else {
-        $task_checked = mysqli_fetch_assoc($result);
-
     }
-
-    if ($task_checked && isset($_GET['check'])) {
-
-        $task_checked_status = intval($_GET['check']);
-        if ($task_checked_status !== 0) {
-            $task_checked_status = 1;
-        }
-
-        $sql = "UPDATE task SET task_status = $task_checked_status  WHERE task_id =  " . $task_checked['task_id'];
-        $result = mysqli_query($mysqli, $sql);
-
-        if (!$result) {
-            $error = mysqli_error($mysqli);
-            echo 'Ошибка Базы данных';
-            die();
-        }
-    }
-
 }
 
 
@@ -126,6 +121,15 @@ if (isset($_SESSION['category']) && $_SESSION['category'] > 0) {
     $sql .= ' AND t.category_id =' . $selected_category;
 }
 
+//полнотекстовый поиск
+if (isset($_GET['search'])) {
+    $search = trim(mysqli_real_escape_string($mysqli, $_GET['search']));
+
+    if (!empty($search)) {
+        $sql .= " AND MATCH (task_name) AGAINST ('$search')";
+    }
+}
+
 
 $sql .= ' ORDER BY creation_date DESC ';
 
@@ -140,24 +144,6 @@ if (!$result) {
 }
 
 
-//полнотекстовый поиск
-if (isset($_GET['search'])) {
-    $search = trim($_GET['search']);
-
-    if (!empty($search)) {
-
-        $sql = "SELECT * FROM task t JOIN category cat ON t.category_id = cat.category_id WHERE user_id = $user_id AND MATCH (task_name) AGAINST (?)";
-        $stmt = db_get_prepare_stmt($mysqli, $sql, [$search]);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-
-        $tasks = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-        if (empty($tasks)) {
-            $tasks = [];
-        }
-    }
-}
 
 $page_content = include_template('index.php', ['tasks' => $tasks, 'show_complete_tasks' => $show_complete_tasks]);
 
