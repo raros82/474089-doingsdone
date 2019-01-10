@@ -45,7 +45,7 @@
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
                         <?php foreach ($categories as $category_value): ?>
-                            <li class="main-navigation__list-item <?php if ($category_value['category_id'] == $selected_category) : ?>main-navigation__list-item--active<?php endif; ?>">
+                            <li class="main-navigation__list-item <?php if (isset($selected_category) && $category_value['category_id'] == $selected_category) :?>main-navigation__list-item--active<?php endif; ?>">
                                 <a class="main-navigation__list-item-link"
                                    href="/?category=<?= $category_value['category_id']; ?>"><?= $category_value['category_name']; ?></a>
                                 <span class="main-navigation__list-item-count"><?= $category_value['count_task_id']; ?></span>

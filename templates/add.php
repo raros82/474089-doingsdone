@@ -29,7 +29,7 @@
         <div class="form__row">
             <label class="form__label" for="date">Дата выполнения</label>
 
-            <input class="form__input form__input--date <?php if ($errors['date']): ?>form__input--error<?php endif; ?>"
+            <input class="form__input form__input--date <?php if (isset($errors['date'])): ?>form__input--error<?php endif; ?>"
                    type="date" name="date" id="date" value="<?php if (isset($add_task['date'])) {
                 echo $add_task['date'];
             } ?>" placeholder="Введите дату в формате ДД.ММ.ГГГГ">
