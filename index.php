@@ -101,13 +101,13 @@ if (isset($_GET['filter']) && $_GET['filter'] == 'overdue') {
 if (isset($_SESSION['task_filter'])) {
     switch ($_SESSION['task_filter']) {
         case "agenda":
-            $sql .= ' AND DAY(deadline) = DAY(NOW())';
+            $sql .= ' AND deadline = CURRENT_DATE';
             break;
         case "tomorrow":
-            $sql .= ' AND DAY(deadline) = DAY(NOW() + INTERVAL 1 DAY)';
+            $sql .= ' AND deadline = CURRENT_DATE + 1';
             break;
         case "overdue":
-            $sql .= ' AND DAY(deadline) < DAY(NOW())';
+            $sql .= ' AND deadline < CURRENT_DATE';
             break;
     }
 
